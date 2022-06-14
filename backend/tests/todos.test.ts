@@ -49,9 +49,7 @@ describe("GET /todos", () => {
   });
 });
 
-const checkpointOne =
-  parseInt(process.env.CHECKPOINT!) > 0 ? describe : describe.skip;
-checkpointOne("GET /todos/{id}", () => {
+describe("GET /todos/{id}", () => {
   it("should return just one Todo when a valid id is OK", async () => {
     const postRes = await supertestRequest
       .post("/api/todos")
@@ -76,33 +74,31 @@ checkpointOne("GET /todos/{id}", () => {
   });
 });
 
-const checkpointTwo =
-  parseInt(process.env.CHECKPOINT!) > 1 ? describe : describe.skip;
-  checkpointTwo("DELETE /todos{id}", () => {
-  it("should return success when id is OK", async () => {
-    const postRes = await supertestRequest
-      .post("/api/todos")
-      .send({ description: "test api" })
-      .set("Accept", "application/json");
-    const idToDelete = postRes.body["id"];
+describe("DELETE /todos{id}", () => {
+it("should return success when id is OK", async () => {
+  const postRes = await supertestRequest
+    .post("/api/todos")
+    .send({ description: "test api" })
+    .set("Accept", "application/json");
+  const idToDelete = postRes.body["id"];
 
-    const res = await supertestRequest
-      .delete(`/api/todos/${idToDelete}`)
-      .set("Accept", "application/json");
-    expect(res.status).toEqual(200);
-  });
+  const res = await supertestRequest
+    .delete(`/api/todos/${idToDelete}`)
+    .set("Accept", "application/json");
+  expect(res.status).toEqual(200);
+});
 
-  it("should return failure when id does not exist", async () => {
-    const idToDelete = "this isn't even a UUID";
+it("should return failure when id does not exist", async () => {
+  const idToDelete = "this isn't even a UUID";
 
-    const res = await supertestRequest
-      .delete(`/api/todos/${idToDelete}`)
-      .set("Accept", "application/json");
-    expect(res.status).toEqual(400);
-    expect(res.body["message"]).toEqual(
-      expect.stringContaining("UUID does not exist")
-    );
-  });
+  const res = await supertestRequest
+    .delete(`/api/todos/${idToDelete}`)
+    .set("Accept", "application/json");
+  expect(res.status).toEqual(400);
+  expect(res.body["message"]).toEqual(
+    expect.stringContaining("UUID does not exist")
+  );
+});
 
   // const extra = parseInt(process.env.CHECKPOINT!) > 2 ? it : it.skip;
   // extra("should return failure when todo is protected", async () => {
@@ -122,23 +118,21 @@ const checkpointTwo =
   // });
 });
 
-const checkpointThree =
-  parseInt(process.env.CHECKPOINT!) > 2 ? describe : describe.skip;
-  checkpointThree("PUT /todos/{id}", () => {
-  it("should return success when id is OK", async () => {
-    const postRes = await supertestRequest
-      .post("/api/todos")
-      .send({ description: "test api" })
-      .set("Accept", "application/json");
-    const todoToUpdate = postRes.body;
-    todoToUpdate.done = true;
+describe("PUT /todos/{id}", () => {
+it("should return success when id is OK", async () => {
+  const postRes = await supertestRequest
+    .post("/api/todos")
+    .send({ description: "test api" })
+    .set("Accept", "application/json");
+  const todoToUpdate = postRes.body;
+  todoToUpdate.done = true;
 
-    const res = await supertestRequest
-      .put(`/api/todos/${todoToUpdate.id}`)
-      .send(todoToUpdate)
-      .set("Accept", "application/json");
-    expect(res.status).toEqual(200);
-  });
+  const res = await supertestRequest
+    .put(`/api/todos/${todoToUpdate.id}`)
+    .send(todoToUpdate)
+    .set("Accept", "application/json");
+  expect(res.status).toEqual(200);
+});
 
   it("should return failure when id does not exist", async () => {
     const idToUpdate = "this isn't even a UUID";
